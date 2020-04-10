@@ -12,6 +12,7 @@ import webbrowser
 
 
 class Wmenu():
+    # This class is used to display the menu of the application
 
     def __init__(self, db):
         self.db_connected = db
@@ -59,6 +60,7 @@ class Wmenu():
         self.root.mainloop()
 
     def go_config(self):
+        # Display config window and quit if database had been recreate
         self.wconfig.show_config()
         if self.wconfig.create_db_asked:
             print("Quit ...")

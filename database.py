@@ -11,6 +11,7 @@ import os.path
 
 
 class Database():
+    # This class is used to manage the database
     def __init__(self):
         self.c = False
         self.bdd = self.connect()
@@ -18,6 +19,8 @@ class Database():
         self.cursor = self.bdd[1]
 
     def create_db(self):
+        # CREATE DATABASE WITH CONNECT.JSON info
+        # CONNECTION TO MYSQL SERVER WITH ROOT USER
         print("CreateDB ...")
         with open('ressources/connect.json') as f:
             self.key = json.load(f)
@@ -30,10 +33,10 @@ class Database():
 
             if self.connection.is_connected():
                 self.cursor = self.connection.cursor()
+                # added server, database, login ... data to scriptSQL
                 print("Connected to Mysql Server ...")
                 path = open('ressources/createdb.sql', 'rt')
                 scriptSQL = path.read()
-                # ajout des infos de connexion server et login
                 scriptSQL = scriptSQL.replace("dbserver", self.key["server"])
                 scriptSQL = scriptSQL.replace("database", self.key["database"])
                 scriptSQL = scriptSQL.replace("dbuser", self.key["login"])
@@ -55,6 +58,7 @@ class Database():
             pass
 
     def connect(self):
+        # OPEN DATABASE WITH CONNECT.JSON info
         self.verify_connect_exists()
 
         with open('ressources/connect.json') as f:
@@ -72,7 +76,6 @@ class Database():
                 self.c = True
                 print("Connected to database ...")
 
-            # self.bd_connected = self.connection
             return [self.connection, self.cursor]
 
         except Error as e:
@@ -81,11 +84,13 @@ class Database():
         return ["", ""]
 
     def destroy_db(self):
-
+        # Destroy database and user attached
+        # Used when we need to init database from wconfig window
         with open('ressources/connect.json') as f:
             self.key = json.load(f)
         try:
             print("Destroy database " + self.key["database"])
+            # We need to connect with root to destroy database and user
             self.disconnect()
             self.connection = mysql.connector.connect(
                 host=self.key["server"],
@@ -122,6 +127,7 @@ class Database():
         return False
 
     def disconnect(self):
+        # Close connection with database
         if (self.bd_connected.is_connected()):
             self.cursor.close()
             self.bd_connected.close()
@@ -129,12 +135,14 @@ class Database():
         print("Disconnected from database ...")
 
     def load_category(self):
+        # Load categories from database
         mySql_select_query = """SELECT name from categorie order by name"""
         self.cursor.execute(mySql_select_query)
         record = self.cursor.fetchall()
         return record
 
     def load_substituted_products_from_local_db(self):
+        # Load substituted product saved in database
         mySql_select_query = """SELECT code, name, nutriscoreG, \
             store, url, substitute from product \
             where product.substitute<>'' order by name"""
@@ -153,6 +161,7 @@ class Database():
         return data
 
     def get_product_name(self, pCode):
+        # Retrieve the name of a product from its code
         mySql_select_query = """SELECT name from product \
             WHERE product.code = \""""+pCode+"""\" """
         self.cursor.execute(mySql_select_query)
@@ -163,6 +172,7 @@ class Database():
             return "?"
 
     def get_nutriscore(self, pCode):
+        # Retrieve the nutriscore of a product from its code
         mySql_select_query = """SELECT nutriscoreG from product \
             WHERE product.code = \""""+pCode+"""\" """
         self.cursor.execute(mySql_select_query)
@@ -173,6 +183,7 @@ class Database():
             return "?"
 
     def exists_category(self, pCateg):
+        # test if a category exists in database
         mySql_select_query = """SELECT name from Categorie \
             WHERE Categorie.name = \""""+pCateg+"""\" """
         self.cursor.execute(mySql_select_query)
@@ -183,6 +194,7 @@ class Database():
             return False
 
     def get_category_id(self, pCateg):
+        # Retrieve the id of a category from its name
         mySql_select_query = """SELECT id from Categorie \
             WHERE Categorie.name = \""""+pCateg+"""\" """
         self.cursor.execute(mySql_select_query)
@@ -193,6 +205,7 @@ class Database():
             return 0
 
     def exists_product(self, pCode):
+        # test if product exists in database
         mySql_select_query = """SELECT id from Product \
             WHERE Product.code = \""""+pCode+"""\" """
         self.cursor.execute(mySql_select_query)
@@ -203,6 +216,7 @@ class Database():
             return False
 
     def insert_product_in_local_database(self, pProduct, pSubstitute):
+        # Create a new product in database
         mySql_insert_query = """INSERT INTO product (code, name, \
             nutriscoreG, store, url, substitute) \
             VALUES (""""'" + pProduct.get('code', "") + "','" \
@@ -217,6 +231,7 @@ class Database():
         self.bd_connected.commit()
 
     def update_substitut(self, pProduct, pSubstitute):
+        # Update product substitut in database 
         mySql_update_query = """UPDATE product \
             set substitute = '""" + pSubstitute + "'" \
             """WHERE code = '""" + pProduct.get('code', "") + "'"
@@ -226,6 +241,7 @@ class Database():
         self.bd_connected.commit()
 
     def insert_category(self, pCategory):
+        # Create a new catogery in database
         mySql_insert_query = """INSERT INTO Categorie (name) \
             VALUES (""""'" + pCategory.replace("'", "''") + "'"") """
         print("\n", mySql_insert_query)
@@ -234,6 +250,8 @@ class Database():
         self.bd_connected.commit()
 
     def insert_rel_product_categorie(
+        # Create a new relation between product and category
+        # in database
             self, id_product, id_categorie):
         mySql_insert_query = """INSERT INTO REL_Product_Categorie \
             (id_product, id_categorie) \
@@ -245,6 +263,7 @@ class Database():
         self.bd_connected.commit()
 
     def get_product_url(self, pCode):
+        # Retrieve the url of a product from its code
         mySql_select_query = """SELECT url from product \
             WHERE product.code = \"""" + pCode + """\" """
         self.cursor.execute(mySql_select_query)
@@ -255,6 +274,7 @@ class Database():
             return "_blank"
 
     def get_product_id(self, pCode):
+        # Retrieve the id of a product from its code
         mySql_select_query = """SELECT id from product \
             WHERE product.code = \"""" + pCode + """\" """
         self.cursor.execute(mySql_select_query)
@@ -265,16 +285,17 @@ class Database():
             return 0
 
     def list_products_in_a_category(self, pCateg):
+        # Search a list of product of a category from database
         print("Download products for "+pCateg+" from database ...")
         prods = []
-        # recherche de l'ID de la catégorie
+        # Search for category ID
         mySql_select_query = """SELECT id from Categorie \
             WHERE Categorie.name = \"""" + pCateg + """\" """
         self.cursor.execute(mySql_select_query)
         category_id = self.cursor.fetchone()
         if (category_id is not None):
-            # recherche des produits de la categorie
-            # ajout de chaque produit dans un dictionnaire
+            # Search for products in the category
+            # Adding each product to a dictionary
 
             mySql_select_query = """SELECT code, name, nutriscoreG, \
                 store, url, substitute from \
@@ -296,6 +317,7 @@ class Database():
         return prods
 
     def create_list_categories_from_api(self, pnbcateg):
+        # Create a list of categories from openfoodfacts
         ap = Api()
         cpt = 0
         for category in ap.list_categories():
@@ -308,6 +330,7 @@ class Database():
         return cpt
 
     def create_list_products_by_category_from_api(self):
+        # Create a list of categorie's products from openfoodfacts
         ap = Api()
         cpt = 0
 
@@ -326,6 +349,7 @@ class Database():
         return cpt
 
     def verify_connect_exists(self):
+        # Verify if connect.json file exists. If no, we create it
         if not os.path.isfile('ressources/connect.json'):
             dico = {}
             dico["server"] = ""

@@ -8,14 +8,18 @@ import json
 
 
 class Wconfig():
-
+    # This class is used to manage the configuration parameters 
+    # of the application
     def __init__(self, caninit, db):
         self.db_connected = db
+        # cainit = 1 if we need to display a checkbutton in
+        # configuration window to create the database
         self.can = caninit
         self.btn_enreg_clicked = False
         self.db_created = False
 
     def show_config(self):
+        # Display config window
         self.fen = tk.Tk()
 
         self.fen.title("Configuration générale de l'application")
@@ -61,6 +65,7 @@ class Wconfig():
         self.fen.nbcateg = Entry(self.fen, width=20)
         self.fen.nbcateg.grid(row=6, column=2, sticky="ew")
         
+        # Display a checkbutton to allow database creation
         self.fen.v = BooleanVar() 
         if self.can == 1:
             self.fen.lbl8 = Label(self.fen, text="Create database")
@@ -85,6 +90,7 @@ class Wconfig():
         self.fen.v.set(not self.fen.v.get())
 
     def load_config(self):
+        # Display configuration saved in connect.json
         print("Load config ...")
         with open('ressources/connect.json') as f:
             self.key = json.load(f)
@@ -102,6 +108,7 @@ class Wconfig():
             print("Error with connect.json", e)
 
     def write_config(self):
+        # Save configuration
         dico = {}
         dico["server"] = self.fen.server.get()
         dico["database"] = self.fen.database.get()
@@ -129,8 +136,10 @@ class Wconfig():
 
     @property
     def config_ok(self):
+        # To know if user quit this window with button "enregistrer"
         return self.btn_enreg_clicked
 
     @property
     def create_db_asked(self):
+        # To know if user asked to create database
         return self.db_created
