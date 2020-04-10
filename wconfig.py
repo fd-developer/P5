@@ -15,7 +15,7 @@ class Wconfig():
         # cainit = 1 if we need to display a checkbutton in
         # configuration window to create the database
         self.can = caninit
-        self.btn_enreg_clicked = False
+        self.btn_save_clicked = False
         self.db_created = False
 
     def show_config(self):
@@ -74,9 +74,9 @@ class Wconfig():
                 self.fen, var=self.fen.v, command=self.callBackCheck)
             self.fen.case.grid(row=7, column=2, sticky="w")
 
-        btn_enreg = Button(
+        btn_save = Button(
             self.fen, text="Enregistrer", command=self.write_config)
-        btn_enreg.grid(row=9, column=1, sticky="nsew")
+        btn_save.grid(row=9, column=1, sticky="nsew")
 
         btn_cancel = Button(
             self.fen, text="Annuler", command=self.fen.destroy)
@@ -127,7 +127,7 @@ class Wconfig():
                 "de données ?"):
                 self.db_created = self.db_connected.destroy_db();
 
-        self.btn_enreg_clicked = True
+        self.btn_save_clicked = True
 
         if self.db_created is False:
             self.fen.destroy()
@@ -137,7 +137,7 @@ class Wconfig():
     @property
     def config_ok(self):
         # To know if user quit this window with button "enregistrer"
-        return self.btn_enreg_clicked
+        return self.btn_save_clicked
 
     @property
     def create_db_asked(self):

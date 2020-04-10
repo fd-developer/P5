@@ -19,10 +19,10 @@ class Api():
         # page = requete.content
         # soup = BeautifulSoup(page)#,'features="html.parser"')
         # categ = soup.find_all("a", {"class": "tag known"})
-        # liste_categ = [elt.string.strip() for elt in categ]
-        # liste_categ.sort()
-        # print(liste_categ)
-        # return liste_categ
+        # list_categ = [elt.string.strip() for elt in categ]
+        # list_categ.sort()
+        # print(list_categ)
+        # return list_categ
         # had been replaced by a method using json ...
 
         url = 'https://fr.openfoodfacts.org/categories.json'
@@ -36,11 +36,11 @@ class Api():
         parsed_json = json.loads(page)
         p = parsed_json['tags']
         i = 0
-        liste_categ = []
+        list_categ = []
         while i < len(p):
-            liste_categ.append(p[i].get('name', ""))
+            list_categ.append(p[i].get('name', ""))
             i += 1
-        return liste_categ
+        return list_categ
 
     def list_products_in_a_category(self, pCateg):
         # Ask an API from openfoodfacts to return a list of products
