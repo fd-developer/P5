@@ -10,6 +10,7 @@ from api import *
 
 
 class Wsearch_substitute():
+    # This class is used to search product's substitute
 
     def __init__(self, db, wparent):
         self.db_connected = db
@@ -26,6 +27,9 @@ class Wsearch_substitute():
             print("Error with nbcateg", e)
 
     def show_list_categories(self):
+        # Display a list of categories on left part and 
+        # a liste of products on the right when we choose 
+        # a category
         self.parent.fen = Toplevel()
         self.fen = self.parent.fen
 
@@ -66,6 +70,7 @@ class Wsearch_substitute():
             row=8, column=1, columnspan=4, sticky="nsew")
 
         # Load list of categories from database or init from API
+        # if no product found in the database
         if (self.list_categories_from_database() == 0):
             nb = self.db_connected.create_list_categories_from_api(
                 self.nbcateg)
@@ -82,6 +87,8 @@ class Wsearch_substitute():
         self.fen.mainloop()
 
     def show_products(self, event):
+        # From database
+        # Display a list of products of the category selected
         print("show products ...")
         if self.fen.listCateg.curselection() is not ():
             index = self.fen.listCateg.curselection()[0]
@@ -90,6 +97,8 @@ class Wsearch_substitute():
                 self.list_products_category()
 
     def list_categories_from_api(self):
+        # From openfoodfacts
+        # Display a list of products of the category selected
         print("show products ...")
         ap = Api()
         cpt = 0
@@ -99,6 +108,7 @@ class Wsearch_substitute():
         print(ap.list_categories())
 
     def list_categories_from_database(self):
+        # Display a list of categories found in database
         print("List categories")
         cpt = 0
         for category in self.db_connected.load_category():
@@ -107,11 +117,11 @@ class Wsearch_substitute():
         return cpt
 
     def list_products_category(self):
-
+        # Display a list of products of the category selected
         self.fen.listProd.delete(0, END)
         index = self.fen.listCateg.curselection()[0]
         self.category_selected = self.fen.listCateg.get(index)
-        self.text.set("listCateg des produits de "+self.category_selected)
+        self.text.set("liste des produits de "+self.category_selected)
 
         cpt = 0
         for name in self.db_connected.list_products_in_a_category(
@@ -121,7 +131,7 @@ class Wsearch_substitute():
                 " (" + name['score'] + ")")
             cpt += 1
 
-        # pas de produit dans la database, on va chercher sur internet
+        # No product in the database, we will search the openfoodfacts
         if cpt == 0:
             ap = Api()
             for name in ap.list_products_in_a_category(self.category_selected):
@@ -132,7 +142,8 @@ class Wsearch_substitute():
         return cpt
 
     def search_substitut_from_database(self):
-        print("search_substitut_from_database")
+        # Search product' substitute 
+        print("Finding the substitute product")
         substituteProduct = {}
         index = self.fen.listProd.curselection()[0]
         selectedProduct = self.fen.listProd.get(index).split(":")
@@ -140,7 +151,7 @@ class Wsearch_substitute():
         score = score[1].replace(")", "")
 
         if len(score) == 1:
-            # rech du produit à substituer
+            # Search for the product to replace
             i = 0
             for product in self.db_connected.list_products_in_a_category(
             self.category_selected):
@@ -150,7 +161,7 @@ class Wsearch_substitute():
                     selProduct = product
                     break
 
-            # rech du produit de substitution
+            # Finding the substitute product
             for product in self.db_connected.list_products_in_a_category(
                     self.category_selected):
 

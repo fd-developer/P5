@@ -7,10 +7,14 @@ from bs4 import BeautifulSoup
 
 
 class Api():
-    # def __init__(self):
+    # This class is used to manage connexion with the 
+    # openfoodfacts api
 
     def list_categories(self):
         print("Download a list of categories from OpenFoodFacts ...")
+        # Download a list of french categories from OpenFoodFacts.org
+
+        # A first method using BeautifulSoup ...
         # requete = requests.get("https://fr.openfoodfacts.org/categories")
         # page = requete.content
         # soup = BeautifulSoup(page)#,'features="html.parser"')
@@ -19,6 +23,7 @@ class Api():
         # liste_categ.sort()
         # print(liste_categ)
         # return liste_categ
+        # had been replaced by a method using json ...
 
         url = 'https://fr.openfoodfacts.org/categories.json'
 
@@ -38,6 +43,8 @@ class Api():
         return liste_categ
 
     def list_products_in_a_category(self, pCateg):
+        # Ask an API from openfoodfacts to return a list of products
+        # of a category
         print("Download products for " + pCateg + " from OFF ...")
 
         url = 'https://fr.openfoodfacts.org/cgi/search.pl?' \
@@ -49,8 +56,6 @@ class Api():
             'User-Agent': 'Student openclassrooms - project 5',
             'From': 'fd-mail@laposte.net'
         }
-        # requete = requests.get("https://fr.openfoodfacts.org/categorie/"
-        # +pCateg+".json")
         requete = requests.get(url, headers=headers)
         page = requete.content
         parsed_json = json.loads(page)

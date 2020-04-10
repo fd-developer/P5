@@ -8,7 +8,8 @@ import webbrowser
 
 
 class Wlist_substitute():
-
+    # This class is used to manage product's substitute
+    
     def __init__(self, db, wParent):
         self.db_connected = db
         self.parent = wParent
