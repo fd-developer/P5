@@ -243,31 +243,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "main.py",
-			"settings":
-			{
-				"buffer_size": 740,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "Database.py",
-			"settings":
-			{
-				"buffer_size": 10880,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "connect-svg.json",
-			"settings":
-			{
-				"buffer_size": 166,
-				"line_ending": "Unix"
-			}
-		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -301,10 +276,12 @@
 	},
 	"expanded_folders":
 	[
-		"/Users/fdeschamps/Prive/Formation/OpenclassRoom python/05 - PROJET 5 - OpenFood/git/P5"
+		"/Users/fdeschamps/Prive/Devs/Git (OCR)/P5"
 	],
 	"file_history":
 	[
+		"/Users/fdeschamps/Prive/Devs/Git (OCR)/P5/main.py",
+		"/Users/fdeschamps/Prive/Devs/Git (OCR)/P5/Database.py",
 		"/Users/fdeschamps/Prive/Formation/OpenclassRoom python/05 - PROJET 5 - OpenFood/git/P5/P5.sublime-project",
 		"/Users/fdeschamps/Prive/Formation/OpenclassRoom python/05 - PROJET 5 - OpenFood/git/P5/Wsearch_substitute.py",
 		"/Users/fdeschamps/Prive/Formation/OpenclassRoom python/05 - PROJET 5 - OpenFood/git/P5/Wmenu.py",
@@ -441,97 +418,8 @@
 	"groups":
 	[
 		{
-			"selected": 1,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "main.py",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 740,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								427,
-								427
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "Database.py",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 10880,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1319,
-								1319
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 246.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "connect-svg.json",
-					"semi_transient": true,
-					"settings":
-					{
-						"buffer_size": 166,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JSON.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				}
 			]
 		}
 	],

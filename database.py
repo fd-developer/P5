@@ -45,7 +45,7 @@ class Database():
                 print(scriptSQL)
                 for reqsql in scriptSQL.split(";"):
                     sql = reqsql + ';'
-                    if sql != ";":
+                    if sql is not ";":
                         try:
                             self.cursor.execute(sql)
                         except OSError as e:
