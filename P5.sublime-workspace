@@ -243,6 +243,35 @@
 	},
 	"buffers":
 	[
+		{
+			"contents": "#! /usr/bin/env python3\n# coding: utf-8\n\nimport json\nimport requests\nfrom bs4 import BeautifulSoup\n\n\nclass Api():\n    # This class is used to manage connexion with the \n    # openfoodfacts api\n\n    def list_categories(self):\n        print(\"Download a list of categories from OpenFoodFacts ...\")\n        # Download a list of french categories from OpenFoodFacts.org\n\n        # A first method using BeautifulSoup ...\n        # requete = requests.get(\"https://fr.openfoodfacts.org/categories\")\n        # page = requete.content\n        # soup = BeautifulSoup(page)#,'features=\"html.parser\"')\n        # categ = soup.find_all(\"a\", {\"class\": \"tag known\"})\n        # list_categ = [elt.string.strip() for elt in categ]\n        # list_categ.sort()\n        # print(list_categ)\n        # return list_categ\n        # had been replaced by a method using json ...\n\n\n\n\n b\n        url = 'https://fr.openfoodfacts.org/categories.json'\n\n        headers = {\n            'User-Agent': 'Student openclassrooms - project 5',\n            'From': 'fd-mail@laposte.net'\n        }\n        requete = requests.get(url, headers=headers)\n        page = requete.content\n        parsed_json = json.loads(page)\n        p = parsed_json['tags']\n        i = 0\n        list_categ = []\n        while i < len(p):\n            list_categ.append(p[i].get('name', \"\"))\n            i += 1\n        return list_categ\n\n    def list_products_in_a_category(self, pCateg):\n        # Ask an API from openfoodfacts to return a list of products\n        # of a category\n        print(\"Download products for \" + pCateg + \" from OFF ...\")\n\n        url = 'https://fr.openfoodfacts.org/cgi/search.pl?' \\\n            'action=process&tagtype_0=categories&tag_contains_0=contains' \\\n            '&tag_0=' + pCateg + \"\" \\\n            '&json=true&tag_1=&page_size=500'\n\n        headers = {\n            'User-Agent': 'Student openclassrooms - project 5',\n            'From': 'fd-mail@laposte.net'\n        }\n        requete = requests.get(url, headers=headers)\n        page = requete.content\n        parsed_json = json.loads(page)\n        p = parsed_json['products']\n        i = 0\n        prods = []\n        while i < len(p):\n            dico = {}\n            dico[\"code\"] = p[i].get('code', \"\")\n            dico[\"name\"] = p[i].get('product_name', \"\").replace(\"\\\\\", \"\")\n            dico[\"score\"] = p[i].get('nutriscore_grade', \"\")\n            dico[\"store\"] = p[i].get('stores', \"\").replace(\"\\\\\", \"\")\n            dico[\"url\"] = p[i].get('url', \"\")\n            prods.append(dico)\n            i += 1\n        return prods\n",
+			"file": "api.py",
+			"file_size": 2545,
+			"file_write_time": 132310194362505181,
+			"settings":
+			{
+				"buffer_size": 2551,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "README.md",
+			"settings":
+			{
+				"buffer_size": 2072,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "database.py",
+			"settings":
+			{
+				"buffer_size": 13900,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -276,10 +305,13 @@
 	},
 	"expanded_folders":
 	[
-		"/Users/fdeschamps/Prive/Devs/Git (OCR)/P5"
+		"/Users/fdeschamps/Prive/Devs/Git (OCR)/P5",
+		"/Users/fdeschamps/Prive/Devs/Git (OCR)/P5/ressources"
 	],
 	"file_history":
 	[
+		"/Users/fdeschamps/Prive/Devs/Git (OCR)/P5/api.py",
+		"/Users/fdeschamps/Prive/Devs/Git (OCR)/P5/README.md",
 		"/Users/fdeschamps/Prive/Devs/Git (OCR)/P5/main.py",
 		"/Users/fdeschamps/Prive/Devs/Git (OCR)/P5/Database.py",
 		"/Users/fdeschamps/Prive/Formation/OpenclassRoom python/05 - PROJET 5 - OpenFood/git/P5/P5.sublime-project",
@@ -418,8 +450,97 @@
 	"groups":
 	[
 		{
+			"selected": 2,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "api.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2551,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1207,
+								1207
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 464.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "README.md",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2072,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								874,
+								874
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Markdown/Markdown.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "database.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 13900,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1949,
+								1949
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 395.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
 			]
 		}
 	],
