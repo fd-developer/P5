@@ -161,6 +161,7 @@ class Wsearch_substitute():
         print("Finding the substitute product")
         selProduct = {}
         substituteProduct = {}
+        substituteFound = False
         index = self.fen.listProd.curselection()[0]
         selectedProduct = self.fen.listProd.get(index).split(":")
         score = selectedProduct[1].split("(")
@@ -169,13 +170,6 @@ class Wsearch_substitute():
         if len(score) == 1:
             # Search for the product to replace
             selProduct = self.get_product_selected(index)
-            # i = 0
-            # for product in self.db_connected.list_products_in_a_category(
-            # self.category_selected):
-            #     i = i + 1
-            #     if i == index:
-            #         selProduct = product
-            #         break
 
             # Finding the substitute product
             for substituteProduct in self.db_connected.list_products_in_a_category(
@@ -193,6 +187,7 @@ class Wsearch_substitute():
                         #     'url': product['url']
                         #     }
 
+                        substituteFound = True
                         if messagebox.askyesno(
                             "info", "Le produit >>" + selectedProduct[1] +
                             " <<" + "\npeut être substitué par : \n\n \
@@ -207,7 +202,7 @@ class Wsearch_substitute():
                                 selProduct, substituteProduct)
                         break
 
-        if substituteProduct == {}:
+        if substituteFound is not True:
             messagebox.showinfo("", "Aucun substitut n'a été trouvé"
                                 " pour \n>> " + selectedProduct[1] + " <<")
 
