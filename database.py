@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 # coding: utf-8
-from tkinter import messagebox 
+from tkinter import messagebox
 import mysql.connector
 from mysql.connector import Error
 import json
@@ -45,7 +45,7 @@ class Database():
                 print(scriptSQL)
                 for reqsql in scriptSQL.split(";"):
                     sql = reqsql + ';'
-                    if sql is not ";":
+                    if sql != ";":
                         try:
                             self.cursor.execute(sql)
                         except OSError as e:
@@ -118,7 +118,7 @@ class Database():
 
                 self.cursor.close()
                 messagebox.showinfo(
-                    "info", "La base de données a été supprimée. Elle sera" \
+                    "info", "La base de données a été supprimée. Elle sera"
                     " recrée lors du prochain lancement de l'application ...")
                 return True
 
@@ -157,13 +157,23 @@ class Database():
             dico["store"] = e[3]
             dico["url"] = e[4]
             dico["substitute"] = e[5]
+
+            # Find the name of the substitute
+            mySql_select_query = """SELECT code, name, nutriscoreG, \
+                store, url, substitute from product \
+                where product.code = '""" + dico["substitute"] + "' order \
+                by name"""
+            self.cursor.execute(mySql_select_query)
+            record1 = self.cursor.fetchall()
+            for e1 in record1:
+                dico["substitutename"] = e1[1]
             data.append(dico)
         return data
 
     def get_product_name(self, pCode):
         # Retrieve the name of a product from its code
         mySql_select_query = """SELECT name from product \
-            WHERE product.code = \""""+pCode+"""\" """
+            WHERE product.code = \"""" + pCode.strip() + """\" """
         self.cursor.execute(mySql_select_query)
         product_name = self.cursor.fetchone()
         if (product_name is not None):
@@ -174,7 +184,7 @@ class Database():
     def get_nutriscore(self, pCode):
         # Retrieve the nutriscore of a product from its code
         mySql_select_query = """SELECT nutriscoreG from product \
-            WHERE product.code = \""""+pCode+"""\" """
+            WHERE product.code = \""""+pCode.strip()+"""\" """
         self.cursor.execute(mySql_select_query)
         score = self.cursor.fetchone()
         if (score is not None):
@@ -185,7 +195,7 @@ class Database():
     def exists_category(self, pCateg):
         # test if a category exists in database
         mySql_select_query = """SELECT name from Categorie \
-            WHERE Categorie.name = \""""+pCateg+"""\" """
+            WHERE Categorie.name = \""""+pCateg.strip()+"""\" """
         self.cursor.execute(mySql_select_query)
         res = self.cursor.fetchone()
         if (res is not None):
@@ -196,7 +206,7 @@ class Database():
     def get_category_id(self, pCateg):
         # Retrieve the id of a category from its name
         mySql_select_query = """SELECT id from Categorie \
-            WHERE Categorie.name = \""""+pCateg+"""\" """
+            WHERE Categorie.name = \""""+pCateg.strip()+"""\" """
         self.cursor.execute(mySql_select_query)
         res = self.cursor.fetchone()
         if (res is not None):
@@ -207,7 +217,7 @@ class Database():
     def exists_product(self, pCode):
         # test if product exists in database
         mySql_select_query = """SELECT id from Product \
-            WHERE Product.code = \""""+pCode+"""\" """
+            WHERE Product.code = \""""+pCode.strip()+"""\" """
         self.cursor.execute(mySql_select_query)
         res = self.cursor.fetchone()
         if (res is not None):
@@ -231,10 +241,10 @@ class Database():
         self.bd_connected.commit()
 
     def update_substitut(self, pProduct, pSubstitute):
-        # Update product substitut in database 
+        # Update product substitut in database
         mySql_update_query = """UPDATE product \
-            set substitute = '""" + pSubstitute + "'" \
-            """WHERE code = '""" + pProduct.get('code', "") + "'"
+            set substitute = '""" + pSubstitute.get('code', "").strip() + "'" \
+            """ WHERE code = '""" + pProduct.get('code', "").strip() + "'"
         print("\n", mySql_update_query)
         self.cursor = self.bd_connected.cursor()
         self.cursor.execute(mySql_update_query)
@@ -265,7 +275,7 @@ class Database():
     def get_product_url(self, pCode):
         # Retrieve the url of a product from its code
         mySql_select_query = """SELECT url from product \
-            WHERE product.code = \"""" + pCode + """\" """
+            WHERE product.code = \"""" + pCode.strip() + """\" """
         self.cursor.execute(mySql_select_query)
         product_url = self.cursor.fetchone()
         if (product_url is not None):
@@ -276,7 +286,7 @@ class Database():
     def get_product_id(self, pCode):
         # Retrieve the id of a product from its code
         mySql_select_query = """SELECT id from product \
-            WHERE product.code = \"""" + pCode + """\" """
+            WHERE product.code = \"""" + pCode.strip() + """\" """
         self.cursor.execute(mySql_select_query)
         product_id = self.cursor.fetchone()
         if (product_id is not None):
@@ -286,11 +296,11 @@ class Database():
 
     def list_products_in_a_category(self, pCateg):
         # Search a list of product of a category from database
-        print("Download products for "+pCateg+" from database ...")
+        print("Download products for "+pCateg.strip()+" from database ...")
         prods = []
         # Search for category ID
         mySql_select_query = """SELECT id from Categorie \
-            WHERE Categorie.name = \"""" + pCateg + """\" """
+            WHERE Categorie.name = \"""" + pCateg.strip() + """\" """
         self.cursor.execute(mySql_select_query)
         category_id = self.cursor.fetchone()
         if (category_id is not None):
@@ -313,6 +323,7 @@ class Database():
                 dico["score"] = e[2]
                 dico["store"] = e[3]
                 dico["url"] = e[4]
+                dico["substitute"] = e[5]
                 prods.append(dico)
         return prods
 

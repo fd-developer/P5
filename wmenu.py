@@ -65,4 +65,3 @@ class Wmenu():
         if self.wconfig.create_db_asked:
             print("Quit ...")
             self.root.quit()
-
