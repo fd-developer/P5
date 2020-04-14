@@ -9,7 +9,6 @@ import webbrowser
 
 class Wlist_substitute():
     # This class is used to manage product's substitute
-    
     def __init__(self, db, wParent):
         self.db_connected = db
         self.parent = wParent
@@ -35,6 +34,7 @@ class Wlist_substitute():
     def open_web_page(self, code):
         url = self.db_connected.get_product_url(code)
         webbrowser.open('' + url + '')
+        print(code)
         print(url)
 
     def show_list_substitutes(self):
@@ -45,13 +45,15 @@ class Wlist_substitute():
             'titre': 'Helvetica 15 bold',
             'titrepage': 'arial 30'
             }
-        column_title = ["Name", "Code", "Score", "Store", "Substitute"]
-        column = ["name", "code", "nutriscoreG", "store", "substitute"]
+        column_title = ["Name", "Code", "Score", "Store", "Substitute",
+                        "Substitute name"]
+        column = ["name", "code", "nutriscoreG", "store", "substitute",
+                        "substitutename"]
         data = self.db_connected.load_substituted_products_from_local_db()
 
         root = tk.Tk()
         root.title("")
-        root.geometry("800x500")
+        root.geometry("1100x500")
         label = tk.Label(
             root,
             text="Liste des produits substitués",

@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 
 
 class Api():
-    # This class is used to manage connexion with the 
+    # This class is used to manage connexion with the
     # openfoodfacts api
 
     def list_categories(self):

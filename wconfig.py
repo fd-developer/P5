@@ -8,7 +8,7 @@ import json
 
 
 class Wconfig():
-    # This class is used to manage the configuration parameters 
+    # This class is used to manage the configuration parameters
     # of the application
     def __init__(self, caninit, db):
         self.db_connected = db
@@ -64,9 +64,9 @@ class Wconfig():
         self.fen.lbl7.grid(row=6, column=1, sticky="w")
         self.fen.nbcateg = Entry(self.fen, width=20)
         self.fen.nbcateg.grid(row=6, column=2, sticky="ew")
-        
+
         # Display a checkbutton to allow database creation
-        self.fen.v = BooleanVar() 
+        self.fen.v = BooleanVar()
         if self.can == 1:
             self.fen.lbl8 = Label(self.fen, text="Create database")
             self.fen.lbl8.grid(row=7, column=1, sticky="w")
@@ -120,12 +120,12 @@ class Wconfig():
 
         with open("ressources/connect.json", "w") as f:
             json.dump(dico, f)
-        
-        if self.fen.v.get():    
+
+        if self.fen.v.get():
             if messagebox.askyesno(
-                "?", "Souhaitez-vous vraiment réinitialiser la base " \
-                "de données ?"):
-                self.db_created = self.db_connected.destroy_db();
+                    "?", "Souhaitez-vous vraiment réinitialiser la base "
+                    "de données ?"):
+                self.db_created = self.db_connected.destroy_db()
 
         self.btn_save_clicked = True
 

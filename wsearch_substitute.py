@@ -7,6 +7,7 @@ import tkinter as tk
 from database import *
 import json
 from api import *
+from wproduct_sheet import *
 
 
 class Wsearch_substitute():
@@ -27,8 +28,8 @@ class Wsearch_substitute():
             print("Error with nbcateg", e)
 
     def show_list_categories(self):
-        # Display a list of categories on left part and 
-        # a liste of products on the right when we choose 
+        # Display a list of categories on left part and
+        # a liste of products on the right when we choose
         # a category
         self.parent.fen = Toplevel()
         self.fen = self.parent.fen
@@ -63,23 +64,29 @@ class Wsearch_substitute():
         self.fen.listProd.grid(
             row=2, column=3, rowspan=6, columnspan=2, sticky="nsew")
 
+        self.btnFicheProd = Button(
+            self.fen, text="Voir la fiche produit",
+            command=self.show_product_sheet)
+        self.btnFicheProd.grid(
+            row=8, column=1, columnspan=1, sticky="nsew")
+
         self.btnRechCateg = Button(
             self.fen, text="Rechercher un produit de substitution",
             command=self.search_substitut_from_database)
         self.btnRechCateg.grid(
-            row=8, column=1, columnspan=4, sticky="nsew")
+            row=8, column=2, columnspan=3, sticky="nsew")
 
         # Load list of categories from database or init from API
         # if no product found in the database
         if (self.list_categories_from_database() == 0):
             nb = self.db_connected.create_list_categories_from_api(
                 self.nbcateg)
-            messagebox.showinfo("Maj catégories", str(nb) + " catégories ont" \
-                " été importées depuis openfoodfacts.org")
+            messagebox.showinfo("Maj catégories", str(nb) + " catégories ont"
+                                " été importées depuis openfoodfacts.org")
 
             nb = self.db_connected.create_list_products_by_category_from_api()
-            messagebox.showinfo("Maj produits", str(nb) + " produits ont" \
-                " été importés depuis openfoodfacts.org")
+            messagebox.showinfo("Maj produits", str(nb) + " produits ont"
+                                " été importés depuis openfoodfacts.org")
 
             self.list_categories_from_database()
 
@@ -95,6 +102,14 @@ class Wsearch_substitute():
             if index > 0:
                 self.indexcateg = index
                 self.list_products_category()
+
+    def show_product_sheet(self):
+        # From database
+        # Display the product sheet of the product selected
+        print("show product sheet ...")
+        index = self.fen.listProd.curselection()[0]
+        prodsheet = Wproduct_sheet(self.get_product_selected(index))
+        prodsheet.display_product_sheet()
 
     def list_categories_from_api(self):
         # From openfoodfacts
@@ -142,8 +157,9 @@ class Wsearch_substitute():
         return cpt
 
     def search_substitut_from_database(self):
-        # Search product' substitute 
+        # Search product' substitute
         print("Finding the substitute product")
+        selProduct = {}
         substituteProduct = {}
         index = self.fen.listProd.curselection()[0]
         selectedProduct = self.fen.listProd.get(index).split(":")
@@ -152,30 +168,30 @@ class Wsearch_substitute():
 
         if len(score) == 1:
             # Search for the product to replace
-            i = 0
-            for product in self.db_connected.list_products_in_a_category(
-            self.category_selected):
-
-                i = i + 1
-                if i == index:
-                    selProduct = product
-                    break
+            selProduct = self.get_product_selected(index)
+            # i = 0
+            # for product in self.db_connected.list_products_in_a_category(
+            # self.category_selected):
+            #     i = i + 1
+            #     if i == index:
+            #         selProduct = product
+            #         break
 
             # Finding the substitute product
-            for product in self.db_connected.list_products_in_a_category(
+            for substituteProduct in self.db_connected.list_products_in_a_category(
                     self.category_selected):
 
-                if len(product['score']) == 1:
-                    print(ord(product['score'].upper()), ord(score.upper()))
-                    if ord(product['score'].upper()) < ord(score.upper()):
+                if len(substituteProduct['score']) == 1:
+                    print(ord(substituteProduct['score'].upper()), ord(score.upper()))
+                    if ord(substituteProduct['score'].upper()) < ord(score.upper()):
 
-                        substituteProduct = {
-                            'code': product['code'],
-                            'name': product['name'],
-                            'score': product['score'],
-                            'store': product['store'],
-                            'url': product['url']
-                            }
+                        # substituteProduct = {
+                        #     'code': product['code'],
+                        #     'name': product['name'],
+                        #     'score': product['score'],
+                        #     'store': product['store'],
+                        #     'url': product['url']
+                        #     }
 
                         if messagebox.askyesno(
                             "info", "Le produit >>" + selectedProduct[1] +
@@ -188,9 +204,21 @@ class Wsearch_substitute():
                                 Souhaitez-vous enregistrer le substitut ?"):
 
                             self.db_connected.update_substitut(
-                                selProduct, product['code'])
+                                selProduct, substituteProduct)
                         break
 
         if substituteProduct == {}:
-            messagebox.showinfo("", "Aucun substitut n'a été trouvé" \
-                " pour \n>> " + selectedProduct[1] + " <<")
+            messagebox.showinfo("", "Aucun substitut n'a été trouvé"
+                                " pour \n>> " + selectedProduct[1] + " <<")
+
+    def get_product_selected(self, index):
+        # Search for the product select in the list
+        i = -1
+        selProduct = {}
+        for product in self.db_connected.list_products_in_a_category(
+        self.category_selected):
+            i = i + 1
+            if i == index:
+                selProduct = product
+                break
+        return selProduct
